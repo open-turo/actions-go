@@ -1,0 +1,26 @@
+name: "golang: Test"
+description: "Executes go unit tests within repository reporting test coverage metrics"
+inputs:
+  checkout-repo:
+    required: false
+    description: "Perform checkout as first step of action"
+    default: "true"
+  github-token:
+    required: true
+    description: "GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'"
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      if: inputs.checkout-repo
+    - name: Setup Tools
+      uses: open-turo/action-setup-tools@v1
+      ## Installs version of golang found in .go-version
+    - name: Authorize
+      uses: open-turo/action-git-auth@v1
+      with:
+        token: ${{ inputs.github-token }}
+    - name: Execute all go tests with coverage in current and all subdirectories
+      shell: bash
+      run: go test -cover ./...

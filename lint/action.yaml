@@ -1,0 +1,48 @@
+name: "golang Lint"
+description: "Lints golang repository"
+inputs:
+  checkout-repo:
+    required: false
+    description: "Perform checkout as first step of action"
+    default: "true"
+  github-token:
+    required: true
+    description: "GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'"
+  commitlint-config-file:
+    required: false
+    description: "Relative or absolute path to the commitlint config file"
+    default: ./.commitlintrc.yml
+  install-gomarkdoc:
+    required: false
+    description: "Whether or not to install gomarkdoc"
+    default: "false"
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      if: inputs.checkout-repo
+      with:
+        fetch-depth: 0
+    - name: Setup Tools
+      uses: open-turo/action-setup-tools@v1
+      ## Installs version of golang found in .go-version
+    - name: Authorize
+      uses: open-turo/action-git-auth@v1
+      with:
+        token: ${{ inputs.github-token }}
+    - name: commitlint
+      uses: wagoid/commitlint-github-action@v4
+      if: (github.actor!= 'dependabot[bot]') && (contains(github.head_ref, 'dependabot/github_actions/') == false)
+      with:
+        configFile: ${{ inputs.commitlint-config-file }}
+    - name: Run npm ci if needed
+      if: hashFiles('package-lock.json') != ''
+      shell: bash
+      run: npm ci
+    - name: Install gomarkdoc
+      if: inputs.install-gomarkdoc
+      shell: bash
+      run: go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@latest
+    - name: pre-commit
+      uses: pre-commit/action@v2.0.0

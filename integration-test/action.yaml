@@ -1,0 +1,35 @@
+name: "golang: Integration-Test"
+description: "Conditionally executes golang integration tests via docker, if docker compose file is found"
+inputs:
+  checkout-repo:
+    required: false
+    description: "Perform checkout as first step of action"
+    default: "true"
+  github-token:
+    required: true
+    description: "GitHub token for docker compose. e.g. 'secrets.GITHUB_TOKEN'."
+  docker-compose-file:
+    required: false
+    description: "Relative or absolute path to docker-compose.yaml file"
+    default: ./docker-compose.yaml
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      if: inputs.checkout-repo
+      with:
+        fetch-depth: 0
+    - name: Build and Test
+      if: hashFiles(inputs.docker-compose-file) != ''
+      shell: bash
+      env:
+        DOCKER_BUILDKIT: "1"
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: docker-compose up --build --exit-code-from test test
+    - name: Cleanup
+      if: hashFiles(inputs.docker-compose-file) != ''
+      shell: bash
+      env:
+        DOCKER_BUILDKIT: "1"
+      run: docker-compose down
