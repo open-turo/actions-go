@@ -4,27 +4,32 @@ inputs:
   checkout-repo:
     required: false
     description: "Perform checkout as first step of action"
-    default: true
+    default: "true"
   github-token:
     required: true
-    description: "GitHub token that can create/delete comments. Usually - 'secrets.GITHUB_TOKEN'"
+    description: "GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'"
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
       if: inputs.checkout-repo
       with:
         fetch-depth: 0
-    - uses: wagoid/commitlint-github-action@v4
-      if: (github.actor!= 'dependabot[bot]') && (contains(github.head_ref, 'dependabot/github_actions/') == false)
+    - name: Setup tools
+      uses: open-turo/action-setup-tools@v1
+      ## Installs version of golang found in .go-version
+    - name: Authorize
+      uses: open-turo/action-git-auth@v1
       with:
-        configFile: .commitlintrc.yml
+        token: ${{ inputs.github-token }}
+    - name: Commitlint
+      uses: wagoid/commitlint-github-action@v4
+      with:
+        configFile: .commitlintrc.yaml
     - name: Run npm ci if needed
       if: hashFiles('package-lock.json') != ''
       shell: bash
       run: npm ci
-    - uses: KeisukeYamashita/setup-release@v1.0.2
-      with:
-        repository: rhysd/actionlint
-    - uses: actions/setup-python@v2
-    - uses: pre-commit/action@v2.0.0
+    - name: Pre-commit
+      uses: open-turo/action-pre-commit@v1

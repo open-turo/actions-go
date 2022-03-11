@@ -1,33 +1,33 @@
-name: "GitHub Action Release & Publish"
-description: "Publish a new release of the Action - adds a new major tag"
+name: "Go Release & Publish"
+description: "Publish a new release of the project"
 inputs:
-  checkout-repo:
-    required: false
-    description: "Perform checkout as first step of action"
-    default: true
-  dry-run:
-    required: false
-    description: "Whether to run semantic release in `dry-run` mode. It will override the dryRun attribute in your configuration file"
-  extra-plugins:
-    required: false
-    description: "Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer."
+  github-token:
+    description: "Github token to use for authentication"
+    required: true
+  go-version:
+    description: "Go version to use for building"
+    required: true
+    default: 1.17.3
 outputs:
-  new_release_published:
-    description: "Whether a new release was published"
-    value: ${{ steps.release.outputs.new_release_published }}
-  new_release_version:
-    description: "Version of the new release"
-    value: ${{ steps.release.outputs.new_release_version }}
-  new_release_major_version:
-    description: "Major version of the new release"
-    value: ${{ steps.release.outputs.release-major }}
+  version:
+    description: "Version of the project"
+    value: ${{ steps.release.outputs.version }}
 runs:
-  using: composite
+  using: "composite"
   steps:
-    - uses: actions/checkout@v2
-      if: inputs.checkout-repo
+    - uses: go-semantic-release/action@v1
+      id: release
       with:
-        fetch-depth: 0
-    - run: |
-        echo "Release not implemented yet"
-        exit 1
+        github-token: ${{ inputs.github-token }}
+    - name: Fetch Tags
+      shell: bash
+      run: |
+        git fetch --tags
+        git clean -fd
+    - uses: goreleaser/goreleaser-action@v2
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        GOPRIVATE: github.com/turo/
+        GOVERSION: ${{ inputs.go-version }}
+      with:
+        args: release

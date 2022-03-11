@@ -1,6 +1,6 @@
 # GitHub Action Test
 
-GitHub Action runs tests appropriate for this action.
+GitHub Action that runs unit tests present within the GitHub repository and report test coverage metrics.
 
 ## Usage
 
@@ -9,16 +9,16 @@ jobs:
   test:
     steps:
       - name: Test
-        uses: open-turo/actions-gha/test@v1
+        uses: open-turo/actions-go/test@v1
 ```
 
 Note: by default, this action will perform actions/checkout as its first step.
 
 ## Test
 
-For node based actions, it will run:
+It will run to detect and execute all unit tests in the top level of the
+repository and all subdirectories.
 
 ```shell
-npm ci
-npm test -- --coverage
+go test -cover ./...
 ```

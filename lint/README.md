@@ -1,6 +1,6 @@
 # GitHub Action Lint
 
-GitHub Action runs lint on a GitHub Action
+GitHub Action that runs lint on a GitHub repository.
 
 ## Usage
 
@@ -8,12 +8,8 @@ GitHub Action runs lint on a GitHub Action
 jobs:
   build:
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
       - name: Action Lint
-        uses: open-turo/actions-gha/lint@v1
+        uses: open-turo/actions-go/lint@v1
 ```
 
 Note: by default, this action will perform actions/checkout as its first step.
@@ -24,7 +20,6 @@ This action runs the following lint checks:
 
 - [wagoid/commitlint-github-action](https://github.com/wagoid/commitlint-github-action)
 - [pre-commit/action](https://github.com/pre-commit/action)
-- [check-build](../check-build) - if the action is `node`, this checks that build has been run and committed.
 
 ## Notes
 
