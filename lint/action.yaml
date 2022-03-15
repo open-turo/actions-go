@@ -23,10 +23,6 @@ runs:
       uses: open-turo/action-git-auth@v1
       with:
         token: ${{ inputs.github-token }}
-    - name: Commitlint
-      uses: wagoid/commitlint-github-action@v4
-      with:
-        configFile: .commitlintrc.yaml
     - name: Run npm ci if needed
       if: hashFiles('package-lock.json') != ''
       shell: bash
