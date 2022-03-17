@@ -15,6 +15,9 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Initial step
+      shell: bash
+      run: pwd
     - name: Authorize
       uses: open-turo/action-git-auth@v1
       with:
@@ -23,7 +26,10 @@ runs:
       id: release
       with:
         github-token: ${{ inputs.github-token }}
-    - name: Fetch Tags
+    - name: Prior to fetch tags
+      shell: bash
+      run: pwd
+    - name: Fetch tags
       shell: bash
       run: |
         git fetch --tags
