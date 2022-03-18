@@ -1,6 +1,10 @@
 name: "Go Release & Publish"
 description: "Publish a new release of the project"
 inputs:
+  checkout-repo:
+    required: false
+    description: "Perform checkout as first step of action"
+    default: "true"
   github-token:
     description: "Github token to use for authentication"
     required: true
@@ -15,9 +19,10 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Initial step
-      shell: bash
-      run: pwd
+    - uses: actions/checkout@v2
+      if: inputs.checkout-repo
+      with:
+        fetch-depth: 0
     - name: Authorize
       uses: open-turo/action-git-auth@v1
       with:
@@ -26,9 +31,6 @@ runs:
       id: release
       with:
         github-token: ${{ inputs.github-token }}
-    - name: Prior to fetch tags
-      shell: bash
-      run: pwd
     - name: Fetch tags
       shell: bash
       run: |
