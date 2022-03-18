@@ -18,6 +18,8 @@ runs:
     - name: Checkout
       uses: actions/checkout@v2
       if: inputs.checkout-repo
+      with:
+        fetch-depth: 0
     - name: Build and test
       id: build
       if: hashFiles(inputs.docker-compose-file) != ''
