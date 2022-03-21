@@ -1,6 +1,6 @@
 # GitHub Action Test
 
-GitHub Action that runs unit tests present within the GitHub repository and report test coverage metrics.
+GitHub Action that runs unit tests present within a go based GitHub repository and report test coverage metrics.
 
 ## Usage
 
