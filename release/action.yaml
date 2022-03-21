@@ -6,7 +6,7 @@ inputs:
     description: "Perform checkout as first step of action"
     default: "true"
   github-token:
-    description: "GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'"
+    description: "GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'"
     required: true
   go-version:
     description: "Go version to use for building"
@@ -19,7 +19,8 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
       if: inputs.checkout-repo
       with:
         fetch-depth: 0
@@ -27,7 +28,8 @@ runs:
       uses: open-turo/action-git-auth@v1
       with:
         token: ${{ inputs.github-token }}
-    - uses: go-semantic-release/action@v1
+    - name: Semantic release
+      uses: go-semantic-release/action@v1
       id: release
       with:
         github-token: ${{ inputs.github-token }}
@@ -36,7 +38,8 @@ runs:
       run: |
         git fetch --tags
         git clean -fd
-    - uses: goreleaser/goreleaser-action@v2
+    - name: Goreleaser
+      uses: goreleaser/goreleaser-action@v2
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         GOPRIVATE: github.com/turo/
