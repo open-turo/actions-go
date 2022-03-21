@@ -1,6 +1,6 @@
 # GitHub Action Lint
 
-GitHub Action that runs lint on a GitHub repository.
+GitHub Action that runs lint on a go based GitHub repository.
 
 ## Usage
 
@@ -8,7 +8,7 @@ GitHub Action that runs lint on a GitHub repository.
 jobs:
   build:
     steps:
-      - name: Action Lint
+      - name: Action lint
         uses: open-turo/actions-go/lint@v1
 ```
 
