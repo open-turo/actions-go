@@ -10,14 +10,17 @@ jobs:
     steps:
       - name: Test
         uses: open-turo/actions-go/test@v1
+        with:
+          ## example value for github-token provided below
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 Note: by default, this action will perform actions/checkout as its first step.
 
 ## Test
 
-It will run to detect and execute all unit tests in the top level of the
-repository and all subdirectories.
+The action will run to detect and execute all unit tests in the top level of the
+repository and all subdirectories. Coverage metrics will be reported.
 
 ```shell
 go test -cover ./...

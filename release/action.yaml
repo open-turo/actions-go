@@ -1,23 +1,23 @@
-name: "Go Release & Publish"
-description: "Publish a new release of the project"
+name: "golang: Release & publish"
+description: Publish a new release of the project
 inputs:
   checkout-repo:
     required: false
-    description: "Perform checkout as first step of action"
+    description: Perform checkout as first step of action
     default: "true"
   github-token:
-    description: "GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'"
+    description: GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'
     required: true
   go-version:
-    description: "Go version to use for building"
+    description: Go version to use for building
     required: true
     default: 1.17.3
 outputs:
   version:
-    description: "Version of the project"
+    description: Version of the project
     value: ${{ steps.release.outputs.version }}
 runs:
-  using: "composite"
+  using: composite
   steps:
     - name: Checkout
       uses: actions/checkout@v2

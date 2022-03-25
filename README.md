@@ -8,7 +8,7 @@
 [![semantic-release][semantic-image]][semantic-url]
 [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org)
 
-GitHub Actions for `golang` repositories
+GitHub Actions for `golang` based repositories
 
 ## Actions
 
@@ -18,12 +18,11 @@ GitHub Actions for `golang` repositories
 jobs:
   build:
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Action Lint
+      - name: Lint
         uses: open-turo/actions-go/lint@v1
+        with:
+          ## example value for github-token provided below
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### action: [`release`](./release)
@@ -32,16 +31,11 @@ jobs:
 jobs:
   build:
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Action Semantic Release
+      - name: Release
         uses: open-turo/actions-go/release@v1
         with:
-          dry_run: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ## example value for github-token provided below
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 ### action: [`test`](./test)
@@ -50,10 +44,11 @@ jobs:
 jobs:
   test:
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
       - name: Test
         uses: open-turo/actions-go/test@v1
+        with:
+          ## example value for github-token provided below
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 <!-- Links: -->

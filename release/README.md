@@ -19,6 +19,7 @@ steps:
   - name: Action semantic release
     uses: open-turo/actions-go/release@v1
     with:
+      ## example value for github-token provided below
       github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
@@ -48,16 +49,11 @@ If you are using this action for protected branches, replace `GITHUB_TOKEN` with
 jobs:
   build:
     steps:
-      - uses: open-turo/actions-go/release@v1
+      - name: Action release
+        uses: open-turo/actions-go/release@v1
         id: release # Need an `id` for output variables
         with:
-          fetch-depth: 0
-      - name: Semantic release
-        uses: open-turo/actions-go/release@v1
-        id: semantic # Need an `id` for output variables
-        with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Do something when a new release published
         if: steps.release.outputs.new-release-published == 'true'
         run: |
