@@ -1,4 +1,4 @@
-name: "golang Lint"
+name: golang Lint
 description: "Lints golang repository"
 inputs:
   checkout-repo:
@@ -7,7 +7,9 @@ inputs:
     default: "true"
   github-token:
     required: true
-    description: "GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'"
+    description:
+      "GitHub token that can checkout the repository. e.g.
+      'secrets.GITHUB_TOKEN'"
 runs:
   using: composite
   steps:
@@ -17,8 +19,8 @@ runs:
       with:
         fetch-depth: 0
     - name: Setup tools
-      uses: open-turo/action-setup-tools@v1
       ## Installs version of golang found in .go-version
+      uses: open-turo/action-setup-tools@v1
     - name: Authorize
       uses: open-turo/action-git-auth@v1
       with:

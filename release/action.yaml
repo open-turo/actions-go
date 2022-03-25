@@ -6,7 +6,9 @@ inputs:
     description: "Perform checkout as first step of action"
     default: "true"
   github-token:
-    description: "GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'"
+    description:
+      "GitHub token that can checkout the repository as well as create
+      tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'"
     required: true
   go-version:
     description: "Go version to use for building"

@@ -16,14 +16,21 @@ Note: by default, this action will perform actions/checkout as its first step.
 
 ```yaml
 steps:
-  - name: Action semantic release
-    uses: open-turo/actions-go/release@v1
-    with:
-      github-token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Action semantic release
+      uses: open-turo/actions-go/release@v1
+      with:
+          ## example value for github-token provided below
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-**IMPORTANT**: `GITHUB_TOKEN` does not have the required permissions to operate on protected branches.
-If you are using this action for protected branches, replace `GITHUB_TOKEN` with [Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line). If using the `@semantic-release/git` plugin for protected branches, avoid persisting credentials as part of `actions/checkout@v2` by setting the parameter `persist-credentials: false`. This credential does not have the required permission to operate on protected branches.
+**IMPORTANT**: `GITHUB_TOKEN` does not have the required permissions to operate
+on protected branches. If you are using this action for protected branches,
+replace `GITHUB_TOKEN` with
+[Personal Access Token](https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line).
+If using the `@semantic-release/git` plugin for protected branches, avoid
+persisting credentials as part of `actions/checkout@v2` by setting the parameter
+`persist-credentials: false`. This credential does not have the required
+permission to operate on protected branches.
 
 ### Inputs
 
@@ -46,21 +53,21 @@ If you are using this action for protected branches, replace `GITHUB_TOKEN` with
 
 ```yaml
 jobs:
-  build:
-    steps:
-      - uses: open-turo/actions-go/release@v1
-        id: release # Need an `id` for output variables
-        with:
-          fetch-depth: 0
-      - name: Semantic release
-        uses: open-turo/actions-go/release@v1
-        id: semantic # Need an `id` for output variables
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+    build:
+        steps:
+            - uses: open-turo/actions-go/release@v1
+              id: release # Need an `id` for output variables
+              with:
+                  fetch-depth: 0
+            - name: Semantic release
+              uses: open-turo/actions-go/release@v1
+              id: semantic # Need an `id` for output variables
+              with:
+                  github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Do something when a new release published
-        if: steps.release.outputs.new-release-published == 'true'
-        run: |
-          echo ${{ steps.semantic.outputs.new-release-version }}
-          echo ${{ steps.semantic.outputs.new-release-major-version }}
+            - name: Do something when a new release published
+              if: steps.release.outputs.new-release-published == 'true'
+              run: |
+                  echo ${{ steps.semantic.outputs.new-release-version }}
+                  echo ${{ steps.semantic.outputs.new-release-major-version }}
 ```

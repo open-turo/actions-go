@@ -1,5 +1,7 @@
 name: "golang: Integration test"
-description: "Conditionally executes golang integration tests via docker, if docker compose file is found"
+description:
+  "Conditionally executes golang integration tests via docker, if docker compose
+  file is found"
 inputs:
   checkout-repo:
     required: false

@@ -1,0 +1,19 @@
+{
+    "singleQuote": false,
+    "quoteProps": "as-needed",
+    "printWidth": 80,
+    "proseWrap": "always",
+    "tabWidth": 4,
+    "useTabs": false,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "semi": false,
+    "overrides": [
+        {
+            "files": ["*.json", "*.yaml"],
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
+}
