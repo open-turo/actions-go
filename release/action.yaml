@@ -20,14 +20,17 @@ runs:
   using: composite
   steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       if: inputs.checkout-repo
       with:
         fetch-depth: 0
     - name: Authorize
-      uses: open-turo/action-git-auth@v1
+      uses: open-turo/action-git-auth@v2
       with:
-        token: ${{ inputs.github-token }}
+        github-personal-access-token: ${{ inputs.github-token }}
+    - name: Setup tools
+      ## Installs version of golang found in .go-version
+      uses: open-turo/action-setup-tools@v1
     - name: Semantic release
       uses: go-semantic-release/action@v1
       id: release

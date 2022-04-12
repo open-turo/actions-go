@@ -12,7 +12,7 @@ runs:
   using: composite
   steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       if: inputs.checkout-repo
       with:
         fetch-depth: 0
@@ -20,9 +20,9 @@ runs:
       ## Installs version of golang found in .go-version
       uses: open-turo/action-setup-tools@v1
     - name: Authorize
-      uses: open-turo/action-git-auth@v1
+      uses: open-turo/action-git-auth@v2
       with:
-        token: ${{ inputs.github-token }}
+        github-personal-access-token: ${{ inputs.github-token }}
     - name: Execute all go tests with coverage in current and all subdirectories
       shell: bash
       run: go test -cover ./...
