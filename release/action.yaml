@@ -1,12 +1,12 @@
 name: "golang: Release & publish"
-description: Publish a new release of the project
+description: GitHub Action that produces a new Release of a golang based repository.
 inputs:
   checkout-repo:
     required: false
     description: Perform checkout as first step of action
     default: "true"
   github-token:
-    description: GitHub token that can checkout the repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'
+    description: GitHub token that can checkout the consumer repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'
     required: true
   go-version:
     description: Go version to use for building

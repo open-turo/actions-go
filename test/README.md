@@ -1,6 +1,8 @@
 # GitHub Action Test
 
-GitHub Action that runs unit tests present within a go based GitHub repository and report test coverage metrics.
+## Description
+
+GitHub Action that executes unit tests present anywhere within a golang based GitHub repository and reports results including coverage metrics
 
 ## Usage
 
@@ -15,13 +17,23 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-Note: by default, this action will perform actions/checkout as its first step.
+## Inputs
 
-## Test
+| parameter     | description                                                                         | required | default |
+| ------------- | ----------------------------------------------------------------------------------- | -------- | ------- |
+| checkout-repo | Perform checkout as first step of action                                            | `false`  | true    |
+| github-token  | GitHub token that can checkout the consumer repository. e.g. 'secrets.GITHUB_TOKEN' | `true`   |         |
 
-The action will run to detect and execute all unit tests in the top level of the
-repository and all subdirectories. Coverage metrics will be reported.
+## Runs
+
+This action is an `composite` action.
+
+## Test command used
 
 ```shell
 go test -cover ./...
 ```
+
+## Notes
+
+- By default, this action will perform actions/checkout as its first step.
