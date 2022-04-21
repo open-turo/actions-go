@@ -1,5 +1,5 @@
 name: "golang: Test"
-description: Executes go unit tests within repository reporting test coverage metrics
+description: GitHub Action that executes unit tests present anywhere within a golang based GitHub repository and reports results including coverage metrics
 inputs:
   checkout-repo:
     required: false
@@ -7,7 +7,7 @@ inputs:
     default: "true"
   github-token:
     required: true
-    description: GitHub token that can checkout the repository. e.g. 'secrets.GITHUB_TOKEN'
+    description: GitHub token that can checkout the consumer repository. e.g. 'secrets.GITHUB_TOKEN'
 runs:
   using: composite
   steps:
