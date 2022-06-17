@@ -1,6 +1,6 @@
 # `open-turo/actions-go`
 
-GitHub Actions for `golang` based repositories
+GitHub Actions for `golang` based repositories. These rely on the other actions present in [open-turo](https://github.com/open-turo). 
 
 [![GitHub release](https://img.shields.io/github/release/Naereen/StrapDown.js.svg)](https://GitHub.com/Naereen/StrapDown.js/releases/)
 [![Release date][release-date-image]][release-url]
