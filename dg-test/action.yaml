@@ -1,0 +1,22 @@
+name: test
+description: For testing purposes
+inputs:
+  boolean-input:
+    required: false
+    description: Perform checkout as first step of action
+    default: "true"
+runs:
+  using: composite
+  steps:
+    - name: Implicit test
+      if: inputs.boolean-input
+      shell: bash
+      run: echo "Results -> Implicit test is true"
+    - name: Literal boolean test
+      if: always() && inputs.boolean-input == true
+      shell: bash
+      run: echo "Results -> Literal boolean test is true"
+    - name: Literal single tick string test
+      if: always() && inputs.boolean-input == 'true'
+      shell: bash
+      run: echo "Results -> Literal single tick string test is true"
