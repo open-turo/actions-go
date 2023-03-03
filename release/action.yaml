@@ -8,10 +8,6 @@ inputs:
   github-token:
     description: GitHub token that can checkout the consumer repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'
     required: true
-  go-version:
-    description: Go version to use for building
-    required: true
-    default: 1.17.3
 outputs:
   version:
     description: Version of the project
@@ -41,11 +37,14 @@ runs:
       run: |
         git fetch --tags
         git clean -fd
+    - name: Set Go Version
+      shell: bash
+      run: |
+        echo "GOVERSION=$(< .go-version tr -d '\n')" >> $GITHUB_ENV
     - name: Goreleaser
       uses: goreleaser/goreleaser-action@v2
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         GOPRIVATE: github.com/turo/
-        GOVERSION: ${{ inputs.go-version }}
       with:
         args: release
