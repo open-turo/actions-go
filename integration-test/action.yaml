@@ -12,6 +12,10 @@ inputs:
     required: false
     description: Relative or absolute path to docker-compose.yaml file
     default: ./docker-compose.yaml
+  full-compose-output:
+    required: false
+    description: Set this to true to log all container output from docker-compose
+    default: "false"
 runs:
   using: composite
   steps:
@@ -28,7 +32,7 @@ runs:
         DOCKER_BUILDKIT: "1"
         GITHUB_TOKEN: ${{ inputs.github-token }}
       run: |
-        docker-compose -f ${{ inputs.docker-compose-file }} up --build --exit-code-from test test
+        docker-compose -f ${{ inputs.docker-compose-file }} up --build --exit-code-from test ${{ inputs.full-compose-output == 'false' && 'test' || '' }}
         echo '::set-output name=docker_up::true'
     - name: Cleanup
       if: ${{ steps.build.outputs.docker_up }}
