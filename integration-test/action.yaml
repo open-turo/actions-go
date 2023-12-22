@@ -32,7 +32,7 @@ runs:
         DOCKER_BUILDKIT: "1"
         GITHUB_TOKEN: ${{ inputs.github-token }}
       run: |
-        docker compose down -v -f ${{ inputs.docker-compose-file }} \
+        docker compose -f ${{ inputs.docker-compose-file }} down -v \
         && docker compose -f ${{ inputs.docker-compose-file }} up --build --exit-code-from test ${{ inputs.full-compose-output == 'false' && 'test' || '' }}
         echo '::set-output name=docker_up::true'
     - name: Cleanup
@@ -40,4 +40,4 @@ runs:
       shell: bash
       env:
         DOCKER_BUILDKIT: "1"
-      run: docker compose down -v -f ${{ inputs.docker-compose-file }}
+      run: docker compose -f ${{ inputs.docker-compose-file }} down -v
