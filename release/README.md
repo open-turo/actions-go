@@ -32,7 +32,6 @@ If you are using this action for protected branches, replace `GITHUB_TOKEN` with
 | ------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------- | ------- |
 | checkout-repo | Perform checkout as first step of action                                                                                       | `false`  | true    |
 | github-token  | GitHub token that can checkout the consumer repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN' | `true`   |         |
-| go-version    | Go version to use for building                                                                                                 | `true`   | 1.17.3  |
 
 ## Outputs
 
