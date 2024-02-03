@@ -1,5 +1,5 @@
-name: "golang: Lint"
-description: GitHub Action that lints a golang based repository via [action-pre-commit](https://github.com/open-turo/action-pre-commit)
+name: terraform Lint
+description: GitHub Action that lints a Terraform based repository via [action-pre-commit](https://github.com/open-turo/action-pre-commit)
 inputs:
   checkout-repo:
     required: false
@@ -15,17 +15,18 @@ runs:
       uses: actions/checkout@v4
       if: inputs.checkout-repo == 'true'
       with:
+        # Use fetch-depth of zero to obtain all commit history so that commit message linting can
+        # be properly performed.
         fetch-depth: 0
     - name: Setup tools
-      ## Installs version of golang found in .go-version
-      uses: open-turo/action-setup-tools@v1
+      # Provide opportunity to install terraform, golang, and others
+      uses: open-turo/action-setup-tools@v2
     - name: Authorize
       uses: open-turo/action-git-auth@v2
       with:
         github-personal-access-token: ${{ inputs.github-token }}
-    - name: Run npm ci if needed
-      if: hashFiles('package-lock.json') != ''
-      shell: bash
-      run: npm ci
     - name: Pre-commit
       uses: open-turo/action-pre-commit@v1
+    - name: Check release notes on pull_request
+      if: github.event_name == 'pull_request'
+      uses: open-turo/actions-release/lint-release-notes@v4
