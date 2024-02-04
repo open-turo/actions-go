@@ -42,7 +42,7 @@ runs:
         git fetch --tags
         git clean -fd
     - name: Goreleaser
-      uses: goreleaser/goreleaser-action@v2
+      uses: goreleaser/goreleaser-action@v4
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         GOPRIVATE: github.com/turo/
