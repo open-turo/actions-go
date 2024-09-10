@@ -1,0 +1,71 @@
+name: "golang: Pre-release & publish"
+description: GitHub Action that produces a new pre-release (snapshot) of a golang based repository.
+inputs:
+  checkout-repo:
+    required: false
+    description: Perform checkout as first step of action
+    default: "true"
+  github-token:
+    description: GitHub token that can checkout the consumer repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'
+    required: true
+  go-version:
+    description: Go version to use for building
+    required: true
+    default: 1.17.3
+  push-docker-snapshot:
+    description: If a docker snapshot image is generated, push it to the to the registry
+    required: false
+    default: "false"
+  docker-username:
+    description: Docker username to push the snapshot image to the registry
+    required: false
+  docker-password:
+    description: Docker password to push the snapshot image to the registry
+    required: false
+outputs:
+  version:
+    description: Version of the project
+    value: ${{ steps.release.outputs.version }}
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      if: inputs.checkout-repo == 'true'
+      with:
+        fetch-depth: 0
+    - name: Authorize
+      uses: open-turo/action-git-auth@v2
+      with:
+        github-personal-access-token: ${{ inputs.github-token }}
+    - name: Setup tools
+      ## Installs version of golang found in .go-version
+      uses: open-turo/action-setup-tools@v2
+    - name: Semantic release
+      uses: go-semantic-release/action@v1
+      id: release
+      with:
+        github-token: ${{ inputs.github-token }}
+    - name: Goreleaser
+      uses: goreleaser/goreleaser-action@v6
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        GOVERSION: ${{ inputs.go-version }}
+      with:
+        args: release --snapshot
+    - name: Docker login
+      if: inputs.push-docker-snapshot == 'true'
+      uses: docker/login-action@v3
+      with:
+        username: ${{ inputs.docker-username }}
+        password: ${{ inputs.docker-password }}
+    - name: Push Snapshot Image
+      if: inputs.push-docker-snapshot == 'true'
+      shell: bash
+      run: |
+        # Selects all the docker images that are not the latest tag.
+        # Maybe this doesn't cover all the cases and we could add an input to specify the tag format to push.
+        DOCKER_IMAGES=$(jq -r '.[] | select(.type == "Docker Image") | .path' dist/artifacts.json | grep -v ':latest')
+        for image in $DOCKER_IMAGES; do
+          docker push $image
+        done
