@@ -1,15 +1,15 @@
-# GitHub Action Release
+# GitHub Action Pre-release
 
 <!-- prettier-ignore-start -->
-<!-- action-docs-description source="./prerelease/action.yaml" -->
+<!-- action-docs-description source="prerelease/action.yaml" -->
 ## Description
 
 GitHub Action that produces a new pre-release (snapshot) of a golang based repository.
-<!-- action-docs-description source="./prerelease/action.yaml" -->
+<!-- action-docs-description source="prerelease/action.yaml" -->
 <!-- prettier-ignore-end -->
 
 <!-- prettier-ignore-start -->
-<!-- action-docs-inputs source="./prerelease/action.yaml" -->
+<!-- action-docs-inputs source="prerelease/action.yaml" -->
 ## Inputs
 
 | name | description | required | default |
@@ -20,15 +20,15 @@ GitHub Action that produces a new pre-release (snapshot) of a golang based repos
 | `push-docker-snapshot` | <p>If a docker snapshot image is generated, push it to the to the registry</p> | `false` | `false` |
 | `docker-username` | <p>Docker username to push the snapshot image to the registry</p> | `false` | `""` |
 | `docker-password` | <p>Docker password to push the snapshot image to the registry</p> | `false` | `""` |
-<!-- action-docs-inputs source="./prerelease/action.yaml" -->
+<!-- action-docs-inputs source="prerelease/action.yaml" -->
 
-<!-- action-docs-outputs source="./prerelease/action.yaml" -->
+<!-- action-docs-outputs source="prerelease/action.yaml" -->
 ## Outputs
 
 | name | description |
 | --- | --- |
 | `version` | <p>Version of the project</p> |
-<!-- action-docs-outputs source="./prerelease/action.yaml" -->
+<!-- action-docs-outputs source="prerelease/action.yaml" -->
 ## Outputs
 
 | parameter | description |
@@ -36,7 +36,7 @@ GitHub Action that produces a new pre-release (snapshot) of a golang based repos
 | version | Version of the project |
 <!-- action-docs-outputs -->
 
-<!-- action-docs-runs source="./prerelease/action.yaml -->
+<!-- action-docs-runs source="prerelease/action.yaml -->
 ## Runs
 
 This action is a `composite` action.
