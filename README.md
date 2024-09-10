@@ -29,6 +29,14 @@ See usage [here](./release/README.md#usage).
 
 Documentation is found [here](./release/README.md).
 
+### action: [`prerelease`](./prerelease)
+
+Pre-release will perform the same steps as in the [`release`](./release) action but will run [GoReleaser](https://goreleaser.com/) to generate a [snapshot](https://goreleaser.com/customization/snapshots/?h=snapshot) release.
+
+See usage [here](./prerelease/README.md#usage).
+
+Documentation is found [here](./prerelease/README.md).
+
 ### action: [`test`](./test)
 
 Executes golang unit tests that exist anywhere within the consumer repository and reports test results and coverage metrics as well. [action-setup-tools](https://github.com/open-turo/action-setup-tools) will be used to install golang, honoring the version information found in the `.go-version` file found in the root level of the consumer repository.
