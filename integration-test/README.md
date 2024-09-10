@@ -1,6 +1,43 @@
 # GitHub Action Integration-Test
 
-GitHub Action that conditionally executes integration tests via docker compose if the docker compose file is present.
+<!-- prettier-ignore-start -->
+<!-- action-docs-description source="integration-test/action.yaml" -->
+## Description
+
+Conditionally executes golang integration tests via docker, if docker compose file is found
+<!-- action-docs-description source="integration-test/action.yaml" -->
+
+<!-- action-docs-usage source="integration-test/action.yaml" -->
+## Usage
+
+```yaml
+- uses: @
+  with:
+    checkout-repo:
+    # Perform checkout as first step of action
+    #
+    # Required: false
+    # Default: true
+
+    github-token:
+    # GitHub token for docker compose. e.g. 'secrets.GITHUB_TOKEN'.
+    #
+    # Required: true
+    # Default: ""
+
+    docker-compose-file:
+    # Relative or absolute path to docker-compose.yaml file
+    #
+    # Required: false
+    # Default: ./docker-compose.yaml
+
+    full-compose-output:
+    # Set this to true to log all container output from docker-compose
+    #
+    # Required: false
+    # Default: false
+```
+<!-- action-docs-usage source="integration-test/action.yaml" -->
 
 ## Usage
 
@@ -25,3 +62,4 @@ If the docker compose file is present, the action will run:
 docker-compose up --build --exit-code-from test test
 docker-compose down
 ```
+<!-- prettier-ignore-end -->

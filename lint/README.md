@@ -1,7 +1,11 @@
 # GitHub Action Lint
 
 <!-- prettier-ignore-start -->
-<!-- action-docs-description -->
+<!-- action-docs-description source="lint/action.yaml" -->
+## Description
+
+GitHub Action that lints a Terraform based repository via [action-pre-commit](https://github.com/open-turo/action-pre-commit)
+<!-- action-docs-description source="lint/action.yaml" -->
 ## Description
 
 GitHub Action that lints a Terraform based repository via [action-pre-commit](https://github.com/open-turo/action-pre-commit)
@@ -9,7 +13,14 @@ GitHub Action that lints a Terraform based repository via [action-pre-commit](ht
 <!-- prettier-ignore-end -->
 
 <!-- prettier-ignore-start -->
-<!-- action-docs-inputs -->
+<!-- action-docs-inputs source="lint/action.yaml" -->
+## Inputs
+
+| name | description | required | default |
+| --- | --- | --- | --- |
+| `checkout-repo` | <p>Perform checkout as first step of action</p> | `false` | `true` |
+| `github-token` | <p>GitHub token that can checkout the consumer repository. e.g. 'secrets.GITHUB_TOKEN'</p> | `true` | `""` |
+<!-- action-docs-inputs source="lint/action.yaml" -->
 ## Inputs
 
 | parameter | description | required | default |
@@ -18,16 +29,22 @@ GitHub Action that lints a Terraform based repository via [action-pre-commit](ht
 | github-token | GitHub token that can checkout the consumer repository. e.g. 'secrets.GITHUB_TOKEN' | `true` |  |
 <!-- action-docs-inputs -->
 
-<!-- action-docs-outputs -->
+<!-- action-docs-outputs source="lint/action.yaml" -->
+
+<!-- action-docs-outputs source="lint/action.yaml" -->
 
 <!-- action-docs-outputs -->
 
-<!-- action-docs-runs -->
+<!-- action-docs-runs source="lint/action.yaml" -->
+## Runs
+
+This action is a `composite` action.
+<!-- action-docs-runs source="lint/action.yaml" -->
 ## Runs
 
 This action is a `composite` action.
 <!-- action-docs-runs -->
 
-<!-- action-docs-usage  -->
+<!-- action-docs-usage source="lint/action.yaml"  -->
 <!-- action-docs-usage -->
 <!-- prettier-ignore-end -->

@@ -1,7 +1,11 @@
 # GitHub Action Test
 
 <!-- prettier-ignore-start -->
-<!-- action-docs-description -->
+<!-- action-docs-description source="test/action.yaml" -->
+## Description
+
+GitHub Action that executes unit tests present anywhere within a golang based GitHub repository and reports results including coverage metrics
+<!-- action-docs-description source="test/action.yaml" -->
 ## Description
 
 GitHub Action that executes unit tests present anywhere within a golang based GitHub repository and reports results including coverage metrics
@@ -9,25 +13,55 @@ GitHub Action that executes unit tests present anywhere within a golang based Gi
 <!-- prettier-ignore-end -->
 
 <!-- prettier-ignore-start -->
-<!-- action-docs-inputs -->
+<!-- action-docs-inputs source="test/action.yaml" -->
 ## Inputs
 
-| parameter | description | required | default |
+| name | description | required | default |
+| --- | --- | --- | --- |
+| `checkout-repo` | <p>Perform checkout as first step of action</p> | `false` | `true` |
+| `github-token` | <p>GitHub token that can checkout the consumer repository. e.g. 'secrets.GITHUB_TOKEN'</p> | `true` | `""` |
+<!-- action-docs-inputs source="test/action.yaml" -->
+## Inputs
+
 | --- | --- | --- | --- |
 | checkout-repo | Perform checkout as first step of action | `false` | true |
 | github-token | GitHub token that can checkout the consumer repository. e.g. 'secrets.GITHUB_TOKEN' | `true` |  |
 <!-- action-docs-inputs -->
 
-<!-- action-docs-outputs -->
+<!-- action-docs-outputs source="test/action.yaml" -->
+
+<!-- action-docs-outputs source="test/action.yaml" -->
 
 <!-- action-docs-outputs -->
 
-<!-- action-docs-runs -->
+<!-- action-docs-runs source="test/action.yaml" -->
+## Runs
+
+This action is a `composite` action.
+<!-- action-docs-runs source="test/action.yaml" -->
 ## Runs
 
 This action is a `composite` action.
 <!-- action-docs-runs -->
 
-<!-- action-docs-usage  -->
+<!-- action-docs-usage source="test/action.yaml" -->
+## Usage
+
+```yaml
+- uses: @
+  with:
+    checkout-repo:
+    # Perform checkout as first step of action
+    #
+    # Required: false
+    # Default: true
+
+    github-token:
+    # GitHub token that can checkout the consumer repository. e.g. 'secrets.GITHUB_TOKEN'
+    #
+    # Required: true
+    # Default: ""
+```
+<!-- action-docs-usage source="test/action.yaml" -->
 <!-- action-docs-usage -->
 <!-- prettier-ignore-end -->
