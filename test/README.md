@@ -1,11 +1,11 @@
 # GitHub Action Test
 
 <!-- prettier-ignore-start -->
-<!-- action-docs-description source="test/action.yaml" -->
+<!-- action-docs-description source="action.yaml" -->
 ## Description
 
 GitHub Action that executes unit tests present anywhere within a golang based GitHub repository and reports results including coverage metrics
-<!-- action-docs-description source="test/action.yaml" -->
+<!-- action-docs-description source="action.yaml" -->
 ## Description
 
 GitHub Action that executes unit tests present anywhere within a golang based GitHub repository and reports results including coverage metrics
@@ -13,14 +13,14 @@ GitHub Action that executes unit tests present anywhere within a golang based Gi
 <!-- prettier-ignore-end -->
 
 <!-- prettier-ignore-start -->
-<!-- action-docs-inputs source="test/action.yaml" -->
+<!-- action-docs-inputs source="action.yaml" -->
 ## Inputs
 
 | name | description | required | default |
 | --- | --- | --- | --- |
 | `checkout-repo` | <p>Perform checkout as first step of action</p> | `false` | `true` |
 | `github-token` | <p>GitHub token that can checkout the consumer repository. e.g. 'secrets.GITHUB_TOKEN'</p> | `true` | `""` |
-<!-- action-docs-inputs source="test/action.yaml" -->
+<!-- action-docs-inputs source="action.yaml" -->
 ## Inputs
 
 | --- | --- | --- | --- |
@@ -28,23 +28,23 @@ GitHub Action that executes unit tests present anywhere within a golang based Gi
 | github-token | GitHub token that can checkout the consumer repository. e.g. 'secrets.GITHUB_TOKEN' | `true` |  |
 <!-- action-docs-inputs -->
 
-<!-- action-docs-outputs source="test/action.yaml" -->
+<!-- action-docs-outputs source="action.yaml" -->
 
-<!-- action-docs-outputs source="test/action.yaml" -->
+<!-- action-docs-outputs source="action.yaml" -->
 
 <!-- action-docs-outputs -->
 
-<!-- action-docs-runs source="test/action.yaml" -->
+<!-- action-docs-runs source="action.yaml" -->
 ## Runs
 
 This action is a `composite` action.
-<!-- action-docs-runs source="test/action.yaml" -->
+<!-- action-docs-runs source="action.yaml" -->
 ## Runs
 
 This action is a `composite` action.
 <!-- action-docs-runs -->
 
-<!-- action-docs-usage source="test/action.yaml" -->
+<!-- action-docs-usage source="action.yaml" -->
 ## Usage
 
 ```yaml
@@ -62,6 +62,6 @@ This action is a `composite` action.
     # Required: true
     # Default: ""
 ```
-<!-- action-docs-usage source="test/action.yaml" -->
+<!-- action-docs-usage source="action.yaml" -->
 <!-- action-docs-usage -->
 <!-- prettier-ignore-end -->

@@ -1,13 +1,13 @@
 # GitHub Action Integration-Test
 
 <!-- prettier-ignore-start -->
-<!-- action-docs-description source="integration-test/action.yaml" -->
+<!-- action-docs-description source="action.yaml" -->
 ## Description
 
 Conditionally executes golang integration tests via docker, if docker compose file is found
-<!-- action-docs-description source="integration-test/action.yaml" -->
+<!-- action-docs-description source="action.yaml" -->
 
-<!-- action-docs-usage source="integration-test/action.yaml" -->
+<!-- action-docs-usage source="action.yaml" -->
 ## Usage
 
 ```yaml
@@ -37,7 +37,7 @@ Conditionally executes golang integration tests via docker, if docker compose fi
     # Required: false
     # Default: false
 ```
-<!-- action-docs-usage source="integration-test/action.yaml" -->
+<!-- action-docs-usage source="action.yaml" -->
 
 ## Usage
 
