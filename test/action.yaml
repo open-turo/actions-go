@@ -20,7 +20,7 @@ runs:
       ## Installs version of golang found in .go-version
       uses: open-turo/action-setup-tools@v2
     - name: Authorize
-      uses: open-turo/action-git-auth@v2
+      uses: open-turo/action-git-auth@v3
       with:
         github-personal-access-token: ${{ inputs.github-token }}
     - name: Execute all go tests with coverage in current and all subdirectories
