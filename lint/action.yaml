@@ -22,11 +22,11 @@ runs:
       # Provide opportunity to install terraform, golang, and others
       uses: open-turo/action-setup-tools@v2
     - name: Authorize
-      uses: open-turo/action-git-auth@v2
+      uses: open-turo/action-git-auth@v3
       with:
         github-personal-access-token: ${{ inputs.github-token }}
     - name: Pre-commit
-      uses: open-turo/action-pre-commit@v2
+      uses: open-turo/action-pre-commit@v3
     - name: Check release notes on pull_request
       if: github.event_name == 'pull_request'
-      uses: open-turo/actions-release/lint-release-notes@v4
+      uses: open-turo/actions-release/lint-release-notes@v5
