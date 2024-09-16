@@ -30,7 +30,7 @@ runs:
         github-personal-access-token: ${{ inputs.github-token }}
     - name: Setup tools
       ## Installs version of golang found in .go-version
-      uses: open-turo/action-setup-tools@v1
+      uses: open-turo/action-setup-tools@v2
     - name: Semantic release
       uses: go-semantic-release/action@v1
       id: release
