@@ -5,23 +5,28 @@ inputs:
     required: false
     description: Perform checkout as first step of action
     default: "true"
+  checkout-fetch-depth:
+    required: false
+    description: The number of commits to fetch. 0 indicates all history for all branches and tags
+    default: "0"
+  create-prerelease:
+    required: false
+    description: Whether semantic-release should create a prerelease or do a dry run. This can be useful to set to true when a prerelease requires pushing artifacts semantic-release is in charge of generating
+    default: "false"
   github-token:
     description: GitHub token that can checkout the consumer repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'
     required: true
-  go-version:
-    description: Go version to use for building
-    required: true
-    default: 1.17.3
-  push-docker-snapshot:
-    description: If a docker snapshot image is generated, push it to the to the registry
-    required: false
-    default: "false"
   docker-username:
     description: Docker username to push the snapshot image to the registry
     required: false
   docker-password:
     description: Docker password to push the snapshot image to the registry
     required: false
+  extra-plugins:
+    required: false
+    description: Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.  Defaults to install @open-turo/semantic-release-config.
+    default: |
+      @open-turo/semantic-release-config
 outputs:
   version:
     description: Version of the project
@@ -29,43 +34,165 @@ outputs:
 runs:
   using: composite
   steps:
+    - name: Set vars
+      id: source-vars
+      shell: bash
+      env:
+        event_name: ${{ github.event_name }}
+        dispatch_client_payload_ref: ${{ github.event.client_payload.ref }}
+        dispatch_client_payload_sha: ${{ github.event.client_payload.sha }}
+        push_ref_name: ${{ github.ref_name }}
+        push_sha: ${{ github.sha }}
+        pull_request_ref_name: ${{ github.event.pull_request.head.ref }}
+        pull_request_sha: ${{ github.event.pull_request.head.sha }}
+      run: |
+        echo "event_name=$event_name"
+
+        if [ "$event_name" == "push" ]; then
+          branch=$push_ref_name
+          sha=$push_sha
+        elif [ "$event_name" == "repository_dispatch" ]; then
+          branch=$dispatch_client_payload_ref
+          sha=$dispatch_client_payload_sha
+        elif [ "$event_name" == "pull_request" ]; then
+          branch=$pull_request_ref_name
+          sha=$pull_request_sha
+        else
+          echo "::error::Unsupported event type '$event_name'"
+          exit 1
+        fi
+
+        echo "branch=$branch"
+        echo "branch=$branch" >> $GITHUB_OUTPUT
+
+        echo "sha=$sha"
+        echo "sha=$sha" >> $GITHUB_OUTPUT
+
     - name: Checkout
       uses: actions/checkout@v4
       if: inputs.checkout-repo == 'true'
       with:
-        fetch-depth: 0
+        fetch-depth: ${{ inputs.checkout-fetch-depth }}
+        ref: ${{ steps.source-vars.outputs.branch }}
+
+    # Find PR
+    - uses: 8BitJonny/gh-get-current-pr@3.0.0
+      id: PR
+      with:
+        sha: ${{ steps.source-vars.outputs.sha }}
+
+    - id: check-pr
+      shell: bash
+      run: |
+        if [ -z "${{ steps.PR.outputs.number }}" ]; then
+          echo "pr_found=false" >> $GITHUB_OUTPUT
+          echo "has_prerelease_label=false" >> $GITHUB_OUTPUT
+        else
+          echo "pr_found=true" >> $GITHUB_OUTPUT
+          echo "has_prerelease_label=${{ contains(toJSON(fromJSON(steps.PR.outputs.pr).labels.*.name), 'prerelease') }}" >> $GITHUB_OUTPUT
+        fi
+        git branch
+        echo "branch: ${{ steps.source-vars.outputs.branch }}"
+
+    # Allow the action to download any private dependency in the go library
     - name: Authorize
-      uses: open-turo/action-git-auth@v2
+      uses: open-turo/action-git-auth@v3
       with:
         github-personal-access-token: ${{ inputs.github-token }}
+
     - name: Setup tools
       ## Installs version of golang found in .go-version
       uses: open-turo/action-setup-tools@v2
-    - name: Semantic release
-      uses: go-semantic-release/action@v1
-      id: release
+
+    - name: Prerelease
+      id: prerelease
+      uses: open-turo/actions-release/semantic-release@v5
+      if: steps.check-pr.outputs.has_prerelease_label == 'true'
       with:
+        branches: '["${{ github.event.repository.default_branch }}", {"name": "${{ steps.source-vars.outputs.branch }}","channel": "next","prerelease": "pr-${{ steps.PR.outputs.number }}.${{ github.run_number }}.${{ github.run_attempt }}"}]'
+        dry-run: ${{ inputs.create-prerelease == 'false' }}
+        extra-plugins: ${{ inputs.extra-plugins }}
         github-token: ${{ inputs.github-token }}
-    - name: Goreleaser
-      uses: goreleaser/goreleaser-action@v6
+        override-github-ref-name: ${{ steps.source-vars.outputs.branch }}
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
-        GOVERSION: ${{ inputs.go-version }}
-      with:
-        args: release --snapshot
+    - id: vars
+      if: steps.check-pr.outputs.has_prerelease_label == 'true'
+      shell: bash
+      run: |
+        echo "version=${{ steps.prerelease.outputs.new-release-version }}" >> $GITHUB_OUTPUT
+        echo "run-url=https://github.com/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" >> "$GITHUB_OUTPUT"
+
     - name: Docker login
-      if: inputs.push-docker-snapshot == 'true'
+      if: inputs.docker-username != '' && inputs.docker-password != '' && steps.prerelease.outputs.new-release-version != ''
       uses: docker/login-action@v3
       with:
         username: ${{ inputs.docker-username }}
         password: ${{ inputs.docker-password }}
-    - name: Push Snapshot Image
-      if: inputs.push-docker-snapshot == 'true'
+
+    - name: Goreleaser
+      uses: goreleaser/goreleaser-action@v6
+      if: steps.prerelease.outputs.new-release-published == 'true'
+      id: goreleaser
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      with:
+        args: release
+
+    - name: Get docker artifacts
+      id: get-docker-artifacts
+      if: steps.prerelease.outputs.new-release-published == 'true'
       shell: bash
+      env:
+        GORELEASER_ARTIFACTS: ${{ steps.goreleaser.outputs.artifacts }}
       run: |
-        # Selects all the docker images that are not the latest tag.
-        # Maybe this doesn't cover all the cases and we could add an input to specify the tag format to push.
-        DOCKER_IMAGES=$(jq -r '.[] | select(.type == "Docker Image") | .path' dist/artifacts.json | grep -v ':latest')
-        for image in $DOCKER_IMAGES; do
-          docker push $image
-        done
+        ARTIFACTS="$(echo $GORELEASER_ARTIFACTS | jq -r '[.[] | select(.type == "Docker Image") | .name ][0]')"
+        echo "artifacts=$ARTIFACTS" >> $GITHUB_OUTPUT
+
+    - name: Add new version to summary
+      shell: bash
+      if: steps.prerelease.outputs.new-release-published == 'true'
+      env:
+        NEW_VERSION: ${{ steps.vars.outputs.version }}
+        GORELEASER_ARTIFACTS: ${{ steps.get-docker-artifacts.outputs.artifacts }}
+      run: |
+        echo "::notice::new version: \`${NEW_VERSION}\`"
+        echo "#### New version: \`${NEW_VERSION}\`" >> $GITHUB_STEP_SUMMARY
+        echo "#### Artifacts: ${GORELEASER_ARTIFACTS}" >> $GITHUB_STEP_SUMMARY
+
+    - name: Add no new version to summary
+      shell: bash
+      if: steps.prerelease.outputs.new-release-published != 'true'
+      run: |
+        echo "::notice::no new version"
+        echo "### New version: 'NONE" >> $GITHUB_STEP_SUMMARY
+
+    - name: Check for release notes comment
+      uses: peter-evans/find-comment@v3
+      id: fc-prerelease
+      if: steps.prerelease.outputs.new-release-published == 'true'
+      with:
+        issue-number: ${{ steps.PR.outputs.number }}
+        comment-author: "github-actions[bot]"
+        body-includes: "<!-- prerelease comment -->"
+    - name: Delete previous release note
+      if: steps.fc-prerelease.outputs.comment-id != ''
+      uses: winterjung/comment@v1
+      with:
+        type: delete
+        comment_id: ${{ steps.fc-prerelease.outputs.comment-id }}
+        token: ${{ inputs.github-token }}
+
+    - name: Upsert build version
+      if: steps.prerelease.outputs.new-release-published == 'true'
+      uses: peter-evans/create-or-update-comment@v4
+      with:
+        issue-number: ${{ steps.PR.outputs.number }}
+        body: |
+          <!-- prerelease comment -->
+          ## Prerelease build
+
+          **Build version:** `${{ steps.vars.outputs.version }}`
+          **Artifacts:** `${{ steps.get-docker-artifacts.outputs.artifacts }}`
+
+          [Build output](${{ steps.vars.outputs.run-url }})
