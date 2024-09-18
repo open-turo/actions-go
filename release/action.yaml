@@ -85,6 +85,7 @@ runs:
         fi
     - name: Goreleaser
       uses: goreleaser/goreleaser-action@v6
+      if: steps.release.outputs.new-release-version != '' || inputs.dry-run == 'true'
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         GOPRIVATE: github.com/turo/
