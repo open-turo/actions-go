@@ -23,8 +23,8 @@ GitHub Action that produces a new Release of a golang based repository.
 | `github-token` | <p>GitHub token that can checkout the consumer repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'</p> | `true` | `""` |
 | `dry-run` | <p>Whether to run semantic release in <code>dry-run</code> mode. It will override the <code>dryRun</code> attribute in your configuration file</p> | `false` | `false` |
 | `extra-plugins` | <p>Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.  Defaults to install @open-turo/semantic-release-config.</p> | `false` | `@open-turo/semantic-release-config ` |
-| `docker-username` | <p>Docker username to push the snapshot image to the registry</p> | `false` | `""` |
-| `docker-password` | <p>Docker password to push the snapshot image to the registry</p> | `false` | `""` |
+| `docker-username` | <p>Docker username to push the release image to the registry</p> | `false` | `""` |
+| `docker-password` | <p>Docker password to push the release image to the registry</p> | `false` | `""` |
 <!-- action-docs-inputs source="action.yaml" -->
 ## Inputs
 
@@ -96,13 +96,13 @@ This action is a `composite` action.
     # Default: @open-turo/semantic-release-config 
 
     docker-username:
-    # Docker username to push the snapshot image to the registry
+    # Docker username to push the release image to the registry
     #
     # Required: false
     # Default: ""
 
     docker-password:
-    # Docker password to push the snapshot image to the registry
+    # Docker password to push the release image to the registry
     #
     # Required: false
     # Default: ""

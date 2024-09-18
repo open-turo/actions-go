@@ -22,10 +22,10 @@ inputs:
     default: |
       @open-turo/semantic-release-config
   docker-username:
-    description: Docker username to push the snapshot image to the registry
+    description: Docker username to push the release image to the registry
     required: false
   docker-password:
-    description: Docker password to push the snapshot image to the registry
+    description: Docker password to push the release image to the registry
     required: false
 outputs:
   version:

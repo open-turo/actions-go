@@ -18,8 +18,8 @@ GitHub Action that produces a new pre-release (snapshot) of a golang based repos
 | `checkout-fetch-depth` | <p>The number of commits to fetch. 0 indicates all history for all branches and tags</p> | `false` | `0` |
 | `create-prerelease` | <p>Whether semantic-release should create a prerelease or do a dry run. This can be useful to set to true when a prerelease requires pushing artifacts semantic-release is in charge of generating</p> | `false` | `false` |
 | `github-token` | <p>GitHub token that can checkout the consumer repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'</p> | `true` | `""` |
-| `docker-username` | <p>Docker username to push the snapshot image to the registry</p> | `false` | `""` |
-| `docker-password` | <p>Docker password to push the snapshot image to the registry</p> | `false` | `""` |
+| `docker-username` | <p>Docker username to push the prerelease image to the registry</p> | `false` | `""` |
+| `docker-password` | <p>Docker password to push the prerelease image to the registry</p> | `false` | `""` |
 | `extra-plugins` | <p>Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.  Defaults to install @open-turo/semantic-release-config.</p> | `false` | `@open-turo/semantic-release-config ` |
 <!-- action-docs-inputs source="action.yaml" -->
 
