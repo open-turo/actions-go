@@ -5,13 +5,28 @@ inputs:
     required: false
     description: Perform checkout as first step of action
     default: "true"
+  checkout-fetch-depth:
+    required: false
+    description: The number of commits to fetch. 0 indicates all history for all branches and tags
+    default: "0"
   github-token:
     description: GitHub token that can checkout the consumer repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'
     required: true
-  go-version:
-    description: Go version to use for building
-    required: true
-    default: 1.17.3
+  dry-run:
+    required: false
+    description: Whether to run semantic release in `dry-run` mode. It will override the `dryRun` attribute in your configuration file
+    default: "false"
+  extra-plugins:
+    required: false
+    description: Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.  Defaults to install @open-turo/semantic-release-config.
+    default: |
+      @open-turo/semantic-release-config
+  docker-username:
+    description: Docker username to push the snapshot image to the registry
+    required: false
+  docker-password:
+    description: Docker password to push the snapshot image to the registry
+    required: false
 outputs:
   version:
     description: Version of the project
@@ -23,29 +38,55 @@ runs:
       uses: actions/checkout@v4
       if: inputs.checkout-repo == 'true'
       with:
-        fetch-depth: 0
-    - name: Authorize
-      uses: open-turo/action-git-auth@v2
+        fetch-depth: ${{ inputs.checkout-fetch-depth }}
+        persist-credentials: false
+    - uses: 8BitJonny/gh-get-current-pr@3.0.0
+      id: PR
       with:
-        github-personal-access-token: ${{ inputs.github-token }}
-    - name: Setup tools
-      ## Installs version of golang found in .go-version
-      uses: open-turo/action-setup-tools@v2
-    - name: Semantic release
-      uses: go-semantic-release/action@v1
-      id: release
-      with:
-        github-token: ${{ inputs.github-token }}
-    - name: Fetch tags
+        sha: ${{ github.event.pull_request.head.sha }}
+    - name: Branches configuration
+      id: branches-configuration
       shell: bash
       run: |
-        git fetch --tags
-        git clean -fd
+        if [ -z "${{ steps.PR.outputs.number }}" ]; then
+          echo "branches=${{ github.event.repository.default_branch }}" >> $GITHUB_OUTPUT
+        else
+          echo "branches=[\"${{ github.event.repository.default_branch }}\", {\"name\": \"${{ github.ref_name }}\",\"channel\": \"next\",\"prerelease\": \"pr-${{ steps.PR.outputs.number }}.${{ github.run_number }}.${{ github.run_attempt }}\"}]" >> $GITHUB_OUTPUT
+        fi
+    # Allow the action to download any private dependency in the go library
+    - name: Authorize
+      uses: open-turo/action-git-auth@v3
+      with:
+        github-personal-access-token: ${{ inputs.github-token }}
+    - name: Release
+      id: release
+      uses: open-turo/actions-release/semantic-release@v5
+      with:
+        branches: ${{ steps.branches-configuration.outputs.branches }}
+        dry-run: ${{ inputs.dry-run }}
+        extra-plugins: ${{ inputs.extra-plugins }}
+        github-token: ${{ inputs.github-token }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+
+    - name: Docker login
+      uses: docker/login-action@v3
+      if: inputs.docker-user != '' && inputs.docker-password != '' && steps.release.outputs.new-release-version != ''
+      with:
+        username: ${{ inputs.docker-username }}
+        password: ${{ inputs.docker-password }}
+
+    - name: Set args
+      id: goreleaser-args
+      shell: bash
+      run: |
+        if [[ "${{ inputs.dry-run }}" == "true" ]]; then
+            echo "args=--skip-publish" >> $GITHUB_OUTPUT
+        fi
     - name: Goreleaser
       uses: goreleaser/goreleaser-action@v6
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         GOPRIVATE: github.com/turo/
-        GOVERSION: ${{ inputs.go-version }}
       with:
-        args: release
+        args: release ${{ steps.goreleaser-args.outputs.args }}
