@@ -17,10 +17,10 @@ inputs:
     description: GitHub token that can checkout the consumer repository as well as create tags/releases against it. e.g. 'secrets.GITHUB_TOKEN'
     required: true
   docker-username:
-    description: Docker username to push the snapshot image to the registry
+    description: Docker username to push the prerelease image to the registry
     required: false
   docker-password:
-    description: Docker password to push the snapshot image to the registry
+    description: Docker password to push the prerelease image to the registry
     required: false
   extra-plugins:
     required: false
