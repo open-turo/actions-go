@@ -8,6 +8,10 @@ inputs:
   github-token:
     required: true
     description: GitHub token that can checkout the consumer repository. e.g. 'secrets.GITHUB_TOKEN'
+  coverage-file:
+    required: false
+    description: File to write coverage report to (coverprofile option in go test)
+    default: "covprofile"
 runs:
   using: composite
   steps:
@@ -25,4 +29,4 @@ runs:
         github-personal-access-token: ${{ inputs.github-token }}
     - name: Execute all go tests with coverage in current and all subdirectories
       shell: bash
-      run: go test -cover ./...
+      run: go test -race -cover -covermode atomic -coverprofile=${{ inputs.coverage-file }} ./...

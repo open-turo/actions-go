@@ -20,6 +20,7 @@ GitHub Action that executes unit tests present anywhere within a golang based Gi
 | --- | --- | --- | --- |
 | `checkout-repo` | <p>Perform checkout as first step of action</p> | `false` | `true` |
 | `github-token` | <p>GitHub token that can checkout the consumer repository. e.g. 'secrets.GITHUB_TOKEN'</p> | `true` | `""` |
+| `coverage-file` | <p>File to write coverage report to (coverprofile option in go test)</p> | `false` | `covprofile` |
 <!-- action-docs-inputs source="action.yaml" -->
 ## Inputs
 
@@ -61,6 +62,12 @@ This action is a `composite` action.
     #
     # Required: true
     # Default: ""
+
+    coverage-file:
+    # File to write coverage report to (coverprofile option in go test)
+    #
+    # Required: false
+    # Default: covprofile
 ```
 <!-- action-docs-usage source="action.yaml" -->
 <!-- action-docs-usage -->
