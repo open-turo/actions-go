@@ -55,9 +55,9 @@ runs:
         fi
     # Allow the action to download any private dependency in the go library
     - name: Authorize
-      uses: open-turo/action-git-auth@v3
+      uses: open-turo/action-git-auth@v4
       with:
-        github-personal-access-token: ${{ inputs.github-token }}
+        github-token: ${{ inputs.github-token }}
     - name: Release
       id: release
       uses: open-turo/actions-release/semantic-release@v5
