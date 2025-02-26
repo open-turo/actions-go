@@ -96,9 +96,9 @@ runs:
 
     # Allow the action to download any private dependency in the go library
     - name: Authorize
-      uses: open-turo/action-git-auth@v3
+      uses: open-turo/action-git-auth@v4
       with:
-        github-personal-access-token: ${{ inputs.github-token }}
+        github-token: ${{ inputs.github-token }}
 
     - name: Setup tools
       ## Installs version of golang found in .go-version
