@@ -20,7 +20,7 @@ runs:
         fetch-depth: 0
     - name: Setup tools
       # Provide opportunity to install terraform, golang, and others
-      uses: open-turo/action-setup-tools@v2
+      uses: open-turo/action-setup-tools@v3
     - name: Authorize
       uses: open-turo/action-git-auth@v4
       with:
