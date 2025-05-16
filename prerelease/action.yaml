@@ -102,7 +102,7 @@ runs:
 
     - name: Setup tools
       ## Installs version of golang found in .go-version
-      uses: open-turo/action-setup-tools@v2
+      uses: open-turo/action-setup-tools@v3
 
     - name: Prerelease
       id: prerelease
