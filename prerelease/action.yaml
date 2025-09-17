@@ -30,7 +30,7 @@ inputs:
 outputs:
   version:
     description: Version of the project
-    value: ${{ steps.release.outputs.version }}
+    value: ${{ steps.vars.outputs.version }}
 runs:
   using: composite
   steps:
