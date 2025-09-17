@@ -30,7 +30,7 @@ inputs:
 outputs:
   version:
     description: Version of the project
-    value: ${{ steps.release.outputs.version }}
+    value: ${{ steps.release.outputs.new-release-version }}
 runs:
   using: composite
   steps:
@@ -75,7 +75,7 @@ runs:
 
     - name: Docker login
       uses: docker/login-action@v3
-      if: inputs.docker-user != '' && inputs.docker-password != '' && steps.release.outputs.new-release-version != ''
+      if: inputs.docker-username != '' && inputs.docker-password != '' && steps.release.outputs.new-release-version != ''
       with:
         username: ${{ inputs.docker-username }}
         password: ${{ inputs.docker-password }}
