@@ -130,6 +130,13 @@ runs:
         username: ${{ inputs.docker-username }}
         password: ${{ inputs.docker-password }}
 
+    - name: Clear git state
+      if: steps.prerelease.outputs.new-release-published == 'true'
+      shell: bash
+      run: |
+        # this resets git state for when also (pre)releasing other artifacts, eg. jvm (gradle.properties gets modified)
+        git reset --hard HEAD
+
     - name: Goreleaser
       uses: goreleaser/goreleaser-action@v6
       if: steps.prerelease.outputs.new-release-published == 'true'
