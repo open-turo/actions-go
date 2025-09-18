@@ -58,6 +58,10 @@ runs:
       uses: open-turo/action-git-auth@v4
       with:
         github-token: ${{ inputs.github-token }}
+
+    - name: Setup tools
+      uses: open-turo/action-setup-tools@v3
+
     - name: Release
       id: release
       uses: open-turo/actions-release/semantic-release@v5
@@ -68,10 +72,6 @@ runs:
         github-token: ${{ inputs.github-token }}
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
-
-    - name: Setup tools
-      ## Installs version of golang found in .go-version
-      uses: open-turo/action-setup-tools@v3
 
     - name: Docker login
       uses: docker/login-action@v3
