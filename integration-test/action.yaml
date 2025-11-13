@@ -31,13 +31,17 @@ runs:
       env:
         DOCKER_BUILDKIT: "1"
         GITHUB_TOKEN: ${{ inputs.github-token }}
+        DOCKER_COMPOSE_FILE: ${{ inputs.docker-compose-file }}
+        FULL_COMPOSE_OUTPUT: ${{ inputs.full-compose-output }}
       run: |
-        docker compose -f ${{ inputs.docker-compose-file }} down -v \
-        && docker compose -f ${{ inputs.docker-compose-file }} up --build --exit-code-from test ${{ inputs.full-compose-output == 'false' && 'test' || '' }}
+        [ "$FULL_COMPOSE_OUTPUT" != "false" ] && OUTPUT_ARG="" || OUTPUT_ARG="test"
+        docker compose -f "$DOCKER_COMPOSE_FILE" down -v \
+        && docker compose -f "$DOCKER_COMPOSE_FILE" up --build --exit-code-from test $OUTPUT_ARG
         echo '::set-output name=docker_up::true'
     - name: Cleanup
       if: ${{ steps.build.outputs.docker_up }}
       shell: bash
       env:
         DOCKER_BUILDKIT: "1"
-      run: docker compose -f ${{ inputs.docker-compose-file }} down -v
+        DOCKER_COMPOSE_FILE: ${{ inputs.docker-compose-file }}
+      run: docker compose -f "$DOCKER_COMPOSE_FILE" down -v
