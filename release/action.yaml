@@ -83,8 +83,10 @@ runs:
     - name: Set args
       id: goreleaser-args
       shell: bash
+      env:
+        DRY_RUN: ${{ inputs.dry-run }}
       run: |
-        if [[ "${{ inputs.dry-run }}" == "true" ]]; then
+        if [[ "$DRY_RUN" == "true" ]]; then
             echo "args=--skip-publish" >> $GITHUB_OUTPUT
         fi
     - name: Goreleaser
