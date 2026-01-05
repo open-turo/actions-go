@@ -27,6 +27,10 @@ inputs:
     description: Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.  Defaults to install @open-turo/semantic-release-config.
     default: |
       @open-turo/semantic-release-config
+  post-status-comment:
+    required: false
+    description: Whether to post a status comment on the PR with the new version and docker image. Defaults to true.
+    default: "true"
 outputs:
   version:
     description: Version of the project
@@ -174,28 +178,14 @@ runs:
         echo "::notice::no new version"
         echo "### New version: 'NONE" >> $GITHUB_STEP_SUMMARY
 
-    - name: Check for release notes comment
-      uses: peter-evans/find-comment@v4
-      id: fc-prerelease
-      if: steps.prerelease.outputs.new-release-published == 'true'
+    - name: Post status comment
+      uses: open-turo/action-conditional-pr-comment@v1
+      if: steps.prerelease.outputs.new-release-published == 'true' && inputs.post-status-comment == 'true'
       with:
-        issue-number: ${{ steps.PR.outputs.number }}
-        comment-author: "github-actions[bot]"
-        body-includes: "<!-- prerelease comment -->"
-    - name: Delete previous release note
-      if: steps.fc-prerelease.outputs.comment-id != ''
-      uses: winterjung/comment@v1
-      with:
-        type: delete
-        comment_id: ${{ steps.fc-prerelease.outputs.comment-id }}
-        token: ${{ inputs.github-token }}
-
-    - name: Upsert build version
-      if: steps.prerelease.outputs.new-release-published == 'true'
-      uses: peter-evans/create-or-update-comment@v5
-      with:
-        issue-number: ${{ steps.PR.outputs.number }}
-        body: |
+        workflow: ADD
+        text-detector: "prerelease comment"
+        edit-mode: replace
+        comment: |
           <!-- prerelease comment -->
           ## Prerelease build
 
@@ -203,3 +193,5 @@ runs:
           **Artifacts:** `${{ steps.get-docker-artifacts.outputs.artifacts }}`
 
           [Build output](${{ steps.vars.outputs.run-url }})
+        comment-author: "github-actions[bot]"
+        github-token: ${{ inputs.github-token }}

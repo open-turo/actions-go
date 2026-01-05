@@ -21,6 +21,7 @@ GitHub Action that produces a new pre-release (snapshot) of a golang based repos
 | `docker-username` | <p>Docker username to push the prerelease image to the registry</p> | `false` | `""` |
 | `docker-password` | <p>Docker password to push the prerelease image to the registry</p> | `false` | `""` |
 | `extra-plugins` | <p>Extra plugins for pre-install. You can also specify specifying version range for the extra plugins if you prefer.  Defaults to install @open-turo/semantic-release-config.</p> | `false` | `@open-turo/semantic-release-config ` |
+| `post-status-comment` | <p>Whether to post a status comment on the PR with the new version and docker image. Defaults to true.</p> | `false` | `true` |
 <!-- action-docs-inputs source="action.yaml" -->
 
 <!-- action-docs-outputs source="action.yaml" -->
