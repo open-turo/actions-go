@@ -90,7 +90,7 @@ runs:
             echo "args=--skip-publish" >> $GITHUB_OUTPUT
         fi
     - name: Goreleaser
-      uses: goreleaser/goreleaser-action@v6
+      uses: goreleaser/goreleaser-action@v7
       if: steps.release.outputs.new-release-version != '' || inputs.dry-run == 'true'
       env:
         GITHUB_TOKEN: ${{ inputs.github-token }}
