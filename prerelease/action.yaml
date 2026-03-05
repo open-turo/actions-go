@@ -129,7 +129,7 @@ runs:
 
     - name: Docker login
       if: inputs.docker-username != '' && inputs.docker-password != '' && steps.prerelease.outputs.new-release-version != ''
-      uses: docker/login-action@v3
+      uses: docker/login-action@v4
       with:
         username: ${{ inputs.docker-username }}
         password: ${{ inputs.docker-password }}
