@@ -74,7 +74,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github-token }}
 
     - name: Docker login
-      uses: docker/login-action@v3
+      uses: docker/login-action@v4
       if: inputs.docker-username != '' && inputs.docker-password != '' && steps.release.outputs.new-release-version != ''
       with:
         username: ${{ inputs.docker-username }}
